@@ -250,7 +250,7 @@ export default function BuyChargeModal() {
                     : (
                         ((formik.values.price ?? 0) * 1.1) as number
                       )?.toLocaleString()
-                } ریال`
+                } ریال`,
               )}
             />
           </div>
@@ -264,7 +264,7 @@ export default function BuyChargeModal() {
                         (formik.values.customePrice ?? 0) * 1.1
                       )?.toLocaleString()
                     : ((formik.values.price ?? 0) * 1.1)?.toLocaleString()
-                } ریال`
+                } ریال`,
               )}
             />
           </div>

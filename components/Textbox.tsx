@@ -24,7 +24,7 @@ export default function Textbox({
         value={value}
         onChange={(e) =>
           setValue(
-            maxDigit ? e.target.value.slice(0, maxDigit) : e.target.value
+            maxDigit ? e.target.value.slice(0, maxDigit) : e.target.value,
           )
         }
         className="bg-[#efeff4] border rounded-full h-[55px] w-full px-5 pt-4 peer focus:outline focus:outline-1
