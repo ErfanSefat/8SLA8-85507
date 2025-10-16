@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <div className="w-full px-[50px] flex justify-between text-white h-14 bg-black">
+    <div className="w-full px-[50px] flex justify-between text-white h-14 bg-black max-lg:hidden">
       <ul className="flex items-center gap-3">
         {HEADER_LINKS.right.map((item: linkType) => (
           <Button key={item.id} href={item.href} varient={item.buttonVarient}>
