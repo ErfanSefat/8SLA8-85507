@@ -4,6 +4,7 @@ import {
   Location,
   MessageQuestion,
   Profile,
+  SearchNormal1,
 } from "iconsax-reactjs";
 
 export const MENU_LINKS = [
@@ -96,6 +97,21 @@ export const MENU_ICONS = [
   },
   {
     icon: <LanguageSquare />,
+    href: "",
+  },
+];
+
+export const MOBILE_MENU_ICONS = [
+  {
+    icon: <SearchNormal1 />,
+    href: "",
+  },
+  {
+    icon: <Bag2 />,
+    href: "",
+  },
+  {
+    icon: <Profile />,
     href: "",
   },
 ];

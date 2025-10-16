@@ -5,12 +5,12 @@ export type linkType = {
   buttonVarient?: string;
 };
 
-type MenuChild = {
+export type MenuChild = {
   label: string;
   href: string;
 };
 
-type MenuParent = {
+export type MenuParent = {
   label: string;
   children?: MenuChild[];
 };
