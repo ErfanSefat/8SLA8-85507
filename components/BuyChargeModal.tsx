@@ -10,7 +10,6 @@ import { chargeType } from "@/types/chargeType";
 import { useFormik } from "formik";
 import { chargeSchema } from "@/validation/chargeForm";
 import { BANKS } from "@/constants/banks";
-import { Bank } from "iconsax-reactjs";
 
 export default function BuyChargeModal() {
   const [selectedBank, setSelectedBank] = useState(BANKS[0].name);
@@ -173,7 +172,7 @@ export default function BuyChargeModal() {
           )}
         </div>
         {formComplete && (
-          <div className="bg-[#EFEFF4] w-full p-3 rounded-md space-y-3">
+          <div className="bg-[#EFEFF4] w-full p-3 rounded-md space-y-3 max-md:hidden">
             <div>انتخاب درگاه پرداخت</div>
             <div className="flex gap-3">
               {BANKS.map((bank, idx) => (
@@ -263,19 +262,39 @@ export default function BuyChargeModal() {
           />
         </div>
       </div>
+      {formComplete && (
+        <div className="bg-[#EFEFF4] p-3 rounded-md space-y-3 mx-auto w-full max-w-[315px] md:hidden">
+          <div>انتخاب درگاه پرداخت</div>
+          <div className="flex gap-3">
+            {BANKS.map((bank, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`min-w-20 p-2 flex flex-col justify-center items-center rounded-md ${
+                  bank.name == selectedBank ? " bg-black/20" : "bg-black/5"
+                }`}
+                onClick={() => setSelectedBank(bank.name)}
+              >
+                {bank.icon}
+                {bank.name}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
       <div className="mx-auto w-full max-w-[315px] md:hidden">
         {formComplete ? (
           <button
             type="button"
             onClick={() => alert("شارژ با موفقیت خریداری شد.")}
-            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+            className="w-full py-3 rounded-full bg-primary font-bold md:hidden"
           >
             پرداخت و شارژ
           </button>
         ) : (
           <button
             type="submit"
-            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+            className="w-full py-3 rounded-full bg-primary font-bold md:hidden"
           >
             انتخاب بانک و پرداخت
           </button>
