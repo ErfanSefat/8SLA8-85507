@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import SimSwitch from "./SimSwitch";
 import Switch from "./Switch";
 import Textbox from "./Textbox";
@@ -35,10 +35,13 @@ export default function BuyChargeModal() {
       formik.setFieldValue("price", CHARGE_VALUES[2].value);
       formik.setFieldValue("isCustomPrice", false);
     }
+  }, [formik.values.amazing]);
+
+  useEffect(() => {
     if (formik.values.simType == "D") {
       formik.setFieldValue("amazing", false);
     }
-  }, [formik]);
+  }, [formik.values.simType]);
 
   function ChargeItem({ charge }: { charge: chargeType }) {
     return (
