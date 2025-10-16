@@ -28,7 +28,7 @@ export default function BuyChargeModal() {
     return (
       <button
         disabled={!charge.canBeAmazing && amazing}
-        className={`px-3 py-1 rounded-full flex gap-1 font-bold items-end ${
+        className={`px-3 py-1 rounded-full flex gap-1 justify-center font-bold items-end ${
           charge == price ? "bg-primary" : "bg-[#f0eff5]"
         }
         ${
@@ -48,7 +48,7 @@ export default function BuyChargeModal() {
   }
 
   return (
-    <div className="bg-white p-[30px] pb-[65px] rounded-[15px] shadow-lg md:grid grid-cols-5 max-md:space-y-[25px]">
+    <div className="bg-white p-[30px] pb-[65px] rounded-[15px] shadow-lg md:grid grid-cols-5 max-md:space-y-[25px] vazir">
       <div className="col-span-3 flex flex-col gap-6 items-center max-w-[315px] mx-auto">
         <div className="text-lg font-bold">خرید آنلاین شارژ ایرانسل</div>
         <div className="flex flex-col items-center gap-2">
@@ -174,7 +174,7 @@ export default function BuyChargeModal() {
 
 function Item({ title, value }: { title: string; value?: string }) {
   return (
-    <div className="flex md:flex-col max-md:justify-between gap-[10px]">
+    <div className="flex md:flex-col max-md:justify-between md:gap-[10px]">
       <div className="text-sm text-[#939298]">{title}</div>
       <div className="text-sm md:text-[16px] font-bold ">{value ?? "---"}</div>
     </div>
