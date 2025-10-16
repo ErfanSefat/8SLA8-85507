@@ -44,19 +44,17 @@ export default function BuyChargeModal() {
   }, [formik.values.simType]);
 
   function ChargeItem({ charge }: { charge: chargeType }) {
+    let disabled =
+      (!charge.canBeAmazing && formik.values.amazing) || formComplete;
     return (
       <button
-        disabled={!charge.canBeAmazing && formik.values.amazing}
+        disabled={disabled}
         className={`px-3 py-1 rounded-full flex gap-1 justify-center font-bold items-end ${
           !formik.values.isCustomPrice && formik.values.price === charge.value
             ? "bg-primary"
             : "bg-[#f0eff5]"
         }
-        ${
-          !charge.canBeAmazing &&
-          formik.values.amazing &&
-          "cursor-not-allowed text-[#1010104d]"
-        }`}
+        ${disabled && "cursor-not-allowed text-[#1010104d]"}`}
         onClick={() => {
           formik.setFieldValue("price", charge.value);
           formik.setFieldValue("isCustomPrice", false);
@@ -83,6 +81,7 @@ export default function BuyChargeModal() {
             setSimType={(newSimType) => {
               formik.setFieldValue("simType", newSimType);
             }}
+            disabled={formComplete}
           />
         </div>
         <div className="flex gap-2">
@@ -91,7 +90,7 @@ export default function BuyChargeModal() {
             setState={() => {
               formik.setFieldValue("amazing", !formik.values.amazing);
             }}
-            disabled={formik.values.simType == "D"}
+            disabled={formik.values.simType == "D" || formComplete}
           />
           <label
             htmlFor="charge-amazing"
@@ -111,6 +110,7 @@ export default function BuyChargeModal() {
             label="شماره تلفن همراه"
             setValue={(e: any) => formik.setFieldValue("phone", e)}
             maxDigit={11}
+            disabled={formComplete}
           />
           {formik.errors.phone && formik.touched.phone && (
             <div className="text-red-600 text-xs mt-1">
@@ -128,13 +128,14 @@ export default function BuyChargeModal() {
               className={`px-3 py-1 rounded-full ${
                 formik.values.isCustomPrice ? "bg-primary" : "bg-[#f0eff5]"
               } ${
-                formik.values.amazing && "cursor-not-allowed text-[#1010104d]"
+                (formik.values.amazing || formComplete) &&
+                "cursor-not-allowed text-[#1010104d]"
               }`}
               onClick={() => {
                 formik.setFieldValue("isCustomPrice", true);
                 formik.setFieldValue("price", undefined);
               }}
-              disabled={formik.values.amazing}
+              disabled={formik.values.amazing || formComplete}
               type="button"
             >
               سایر مبالغ
@@ -147,6 +148,7 @@ export default function BuyChargeModal() {
                   value={formik.values.customePrice}
                   label="مبلغ شارژ به ریال"
                   setValue={(e: any) => formik.setFieldValue("customePrice", e)}
+                  disabled={formComplete}
                 />
                 {formik.touched.customePrice && formik.errors.customePrice && (
                   <div className="text-red-600 text-xs mt-1">
@@ -167,6 +169,7 @@ export default function BuyChargeModal() {
             value={formik.values.email}
             label="ایمیل (اختیاری)"
             setValue={(val: any) => formik.setFieldValue("email", val)}
+            disabled={formComplete}
           />
           {formik.touched.email && formik.errors.email && (
             <div className="text-red-600 text-xs mt-1">

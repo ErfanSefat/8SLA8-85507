@@ -5,6 +5,7 @@ export default function Textbox({
   name,
   setValue,
   maxDigit,
+  disabled,
 }: {
   label: string;
   value?: string | number;
@@ -12,10 +13,12 @@ export default function Textbox({
   name: string;
   setValue: (e: any) => void;
   maxDigit?: number;
+  disabled?: boolean;
 }) {
   return (
     <div className="relative cursor-text">
       <input
+        disabled={disabled}
         type={type}
         id={name}
         value={value}

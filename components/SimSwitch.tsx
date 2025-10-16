@@ -1,9 +1,11 @@
 export default function SimSwitch({
   simType,
   setSimType,
+  disabled,
 }: {
   simType: "E" | "D";
   setSimType: (e: any) => void;
+  disabled?: boolean;
 }) {
   return (
     <div className="rounded-full w-[220px] relative flex h-[37px] items-center text-sm border">
@@ -11,6 +13,7 @@ export default function SimSwitch({
         type="button"
         onClick={() => setSimType("E")}
         className="w-1/2 text-center z-10 font-bold"
+        disabled={disabled}
       >
         اعتباری
       </button>
@@ -18,6 +21,7 @@ export default function SimSwitch({
         type="button"
         onClick={() => setSimType("D")}
         className="w-1/2 text-center z-10 font-bold"
+        disabled={disabled}
       >
         دائمی
       </button>
