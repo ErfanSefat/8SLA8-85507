@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import SimSwitch from "./SimSwitch";
 import Switch from "./Switch";
 import Textbox from "./Textbox";
@@ -9,8 +9,12 @@ import { ConvertEnToFaNumber } from "@/utils/formatNumber";
 import { chargeType } from "@/types/chargeType";
 import { useFormik } from "formik";
 import { chargeSchema } from "@/validation/chargeForm";
+import { BANKS } from "@/constants/banks";
+import { Bank } from "iconsax-reactjs";
 
 export default function BuyChargeModal() {
+  const [selectedBank, setSelectedBank] = useState(BANKS[0].name);
+  const [formComplete, setFormComplete] = useState(false);
   const formik = useFormik({
     initialValues: {
       simType: "E" as "E" | "D",
@@ -23,7 +27,7 @@ export default function BuyChargeModal() {
     },
     validationSchema: chargeSchema,
     onSubmit: () => {
-      alert("شارژ با موفقیت خریداری شد.");
+      setFormComplete(true);
     },
   });
 
@@ -171,15 +175,44 @@ export default function BuyChargeModal() {
             </div>
           )}
         </div>
-        <button
-          type="submit"
-          className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
-        >
-          انتخاب بانک و پرداخت
-        </button>
+        {formComplete && (
+          <div className="bg-[#EFEFF4] w-full p-3 rounded-md space-y-3">
+            <div>انتخاب درگاه پرداخت</div>
+            <div className="flex gap-3">
+              {BANKS.map((bank) => (
+                <button
+                  type="button"
+                  className={`min-w-20 p-2 flex flex-col justify-center items-center rounded-md ${
+                    bank.name == selectedBank ? " bg-black/20" : "bg-black/5"
+                  }`}
+                  onClick={() => setSelectedBank(bank.name)}
+                >
+                  {bank.icon}
+                  {bank.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+        {formComplete ? (
+          <button
+            type="button"
+            onClick={() => alert("شارژ با موفقیت خریداری شد.")}
+            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+          >
+            پرداخت و شارژ
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+          >
+            انتخاب بانک و پرداخت
+          </button>
+        )}
       </div>
       <div
-        className="col-span-2 flex flex-col items-center bg-[#F0EFF5] rounded-[8px] gap-[25px] 
+        className="col-span-2 flex flex-col items-center bg-[#F0EFF5] rounded-[8px] gap-[25px] h-fit
                    max-md:py-6 md:p-[10px] md:pb-[25px] max-md:bg-[#fff5cc] max-md:border max-md:border-[#ffd733] max-md:max-w-[315px] max-md:mx-auto"
       >
         <h5 className="bg-white w-full text-center rounded-[8px] py-[15px] font-bold max-md:hidden">
@@ -226,16 +259,29 @@ export default function BuyChargeModal() {
             value={formik.values.amazing ? "شگفت انگیز" : "معمولی"}
           />
           <Item title="ایمیل" value={formik.values.email} />
-          <Item title="نام درگاه پرداخت" value="---" />
+          <Item
+            title="نام درگاه پرداخت"
+            value={formComplete ? selectedBank : undefined}
+          />
         </div>
       </div>
       <div className="mx-auto w-full max-w-[315px] md:hidden">
-        <button
-          type="submit"
-          className="w-full py-3 rounded-full bg-primary font-bold"
-        >
-          انتخاب بانک و پرداخت
-        </button>
+        {formComplete ? (
+          <button
+            type="button"
+            onClick={() => alert("شارژ با موفقیت خریداری شد.")}
+            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+          >
+            پرداخت و شارژ
+          </button>
+        ) : (
+          <button
+            type="submit"
+            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+          >
+            انتخاب بانک و پرداخت
+          </button>
+        )}
       </div>
     </form>
   );

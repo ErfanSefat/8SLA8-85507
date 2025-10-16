@@ -3,7 +3,10 @@ import * as Yup from "yup";
 export const chargeSchema = Yup.object({
   simType: Yup.mixed<"E" | "D">(),
   amazing: Yup.boolean().default(false),
-  phone: Yup.string().required("شماره موبایل الزامی است"),
+  phone: Yup.string()
+    .required("شماره موبایل الزامی است")
+    .matches(/^09\d{9}$/, "شماره موبایل معتبر وارد کنید")
+    .length(11, "شماره موبایل معتبر وارد کنید"),
   price: Yup.number().when("isCustomPrice", {
     is: true,
     then: (schema) => schema.notRequired().nullable(),
