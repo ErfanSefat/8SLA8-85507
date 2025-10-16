@@ -198,13 +198,24 @@ export default function BuyChargeModal() {
           </div>
         )}
         {formComplete ? (
-          <button
-            type="button"
-            onClick={() => alert("شارژ با موفقیت خریداری شد.")}
-            className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
-          >
-            پرداخت و شارژ
-          </button>
+          <div className="flex flex-col gap-3 w-full">
+            <button
+              type="button"
+              onClick={() => alert("شارژ با موفقیت خریداری شد.")}
+              className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+            >
+              پرداخت و شارژ
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFormComplete(false);
+              }}
+              className="w-full font-bold text-blue-700 max-md:hidden"
+            >
+              انصراف
+            </button>
+          </div>
         ) : (
           <button
             type="submit"
@@ -290,13 +301,24 @@ export default function BuyChargeModal() {
       )}
       <div className="mx-auto w-full max-w-[315px] md:hidden">
         {formComplete ? (
-          <button
-            type="button"
-            onClick={() => alert("شارژ با موفقیت خریداری شد.")}
-            className="w-full py-3 rounded-full bg-primary font-bold md:hidden"
-          >
-            پرداخت و شارژ
-          </button>
+          <div className="flex flex-col gap-3 w-full">
+            <button
+              type="button"
+              onClick={() => alert("شارژ با موفقیت خریداری شد.")}
+              className="w-full py-3 rounded-full bg-primary font-bold md:hidden"
+            >
+              پرداخت و شارژ
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFormComplete(false);
+              }}
+              className="w-full font-bold text-blue-700 md:hidden"
+            >
+              انصراف
+            </button>
+          </div>
         ) : (
           <button
             type="submit"
