@@ -11,15 +11,15 @@ export default function Menubar() {
         <Link href={""}>
           <Image src="./mtn.svg" height={20} width={80} alt="mtn icon" />
         </Link>
-        {MENU_LINKS.map((item: MenuItemType) => (
-          <li>
+        {MENU_LINKS.map((item: MenuItemType, idx) => (
+          <li key={idx}>
             <HoverMenu menuItem={item} />
           </li>
         ))}
       </ul>
       <ul className="flex items-center gap-6">
-        {MENU_ICONS.map((item) => (
-          <li>
+        {MENU_ICONS.map((item, idx) => (
+          <li key={idx}>
             <Link href={item.href}>{item.icon}</Link>
           </li>
         ))}

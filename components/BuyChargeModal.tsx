@@ -36,13 +36,10 @@ export default function BuyChargeModal() {
       formik.setFieldValue("price", CHARGE_VALUES[2].value);
       formik.setFieldValue("isCustomPrice", false);
     }
-  }, [formik.values.amazing]);
-
-  useEffect(() => {
     if (formik.values.simType == "D") {
       formik.setFieldValue("amazing", false);
     }
-  }, [formik.values.simType]);
+  }, [formik]);
 
   function ChargeItem({ charge }: { charge: chargeType }) {
     return (
@@ -179,8 +176,9 @@ export default function BuyChargeModal() {
           <div className="bg-[#EFEFF4] w-full p-3 rounded-md space-y-3">
             <div>انتخاب درگاه پرداخت</div>
             <div className="flex gap-3">
-              {BANKS.map((bank) => (
+              {BANKS.map((bank, idx) => (
                 <button
+                  key={idx}
                   type="button"
                   className={`min-w-20 p-2 flex flex-col justify-center items-center rounded-md ${
                     bank.name == selectedBank ? " bg-black/20" : "bg-black/5"

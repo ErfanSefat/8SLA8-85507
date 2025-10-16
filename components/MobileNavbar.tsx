@@ -24,8 +24,8 @@ export default function MobileNavbar() {
           <Image src="./mtn.svg" height={20} width={80} alt="mtn icon" />
         </Link>
         <ul className="flex items-center gap-5">
-          {MOBILE_MENU_ICONS.map((item) => (
-            <li>
+          {MOBILE_MENU_ICONS.map((item, idx) => (
+            <li key={idx}>
               <Link href={item.href}>{item.icon}</Link>
             </li>
           ))}
@@ -49,8 +49,9 @@ export default function MobileNavbar() {
         </div>
         <div className="flex flex-col divide-y px-6">
           {tab == 0 &&
-            MENU_LINKS.map((item) => (
+            MENU_LINKS.map((item, idx) => (
               <div
+                key={idx}
                 onClick={() => {
                   if (item.parents) {
                     setTab(1);
@@ -76,8 +77,9 @@ export default function MobileNavbar() {
                 <ArrowRight2 size={15} />
                 بازگشت
               </div>
-              {tab1Content?.map((item) => (
+              {tab1Content?.map((item, idx) => (
                 <div
+                  key={idx}
                   className="flex items-center justify-between py-3"
                   onClick={() => {
                     if (item.children) {
@@ -101,8 +103,10 @@ export default function MobileNavbar() {
                 <ArrowRight2 size={15} />
                 بازگشت
               </div>
-              {tab2Content?.map((item) => (
-                <div className="py-3">{item.label}</div>
+              {tab2Content?.map((item, idx) => (
+                <div key={idx} className="py-3">
+                  {item.label}
+                </div>
               ))}
             </>
           )}

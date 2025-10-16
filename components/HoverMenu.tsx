@@ -8,8 +8,8 @@ export default function HoverMenu({ menuItem }: { menuItem: MenuItemType }) {
       <div className="py-2">{menuItem.label}</div>
       {menuItem.children && (
         <div className="absolute min-w-[200px] top-10 bg-black hidden py-2 group-hover:flex flex-col gap-2 text-white text-nowrap rounded-xl divide-y-2 divide-white/30">
-          {menuItem.children.map((child) => (
-            <Link href={child.href} className="py-2 px-4">
+          {menuItem.children.map((child, idx) => (
+            <Link key={idx} href={child.href} className="py-2 px-4">
               {child.label}
             </Link>
           ))}
@@ -17,13 +17,16 @@ export default function HoverMenu({ menuItem }: { menuItem: MenuItemType }) {
       )}
       {menuItem.parents && (
         <div className="absolute min-w-[200px] top-10 bg-black hidden py-2 group-hover:flex flex-col gap-2 text-white text-nowrap rounded-xl divide-y-2 divide-white/30">
-          {menuItem.parents.map((parent) => (
-            <div className="py-2 px-4 relative group/parent flex justify-between items-center">
+          {menuItem.parents.map((parent, idx) => (
+            <div
+              key={idx}
+              className="py-2 px-4 relative group/parent flex justify-between items-center"
+            >
               {parent.label}
               <ArrowLeft2 size={15} />
               <div className="absolute min-w-[200px] top-0 right-[200px] bg-black hidden py-2 group-hover/parent:flex flex-col gap-2 text-white text-nowrap rounded-xl divide-y-2 divide-white/30">
-                {parent.children?.map((child) => (
-                  <Link href={child.href} className="py-2 px-4">
+                {parent.children?.map((child, idx) => (
+                  <Link key={idx} href={child.href} className="py-2 px-4">
                     {child.label}
                   </Link>
                 ))}
