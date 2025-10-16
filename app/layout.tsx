@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import Menubar from "@/components/Menubar";
 import MobileNavbar from "@/components/MobileNavbar";
-
-const inter = Inter({ subsets: ["latin"] });
+import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
   title: "فروشگاه اینترنتی ایرانسل",
@@ -23,7 +21,7 @@ export default function RootLayout({
         <Header />
         <Menubar />
         <MobileNavbar />
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

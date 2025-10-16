@@ -1,17 +1,27 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SimSwitch from "./SimSwitch";
 import Switch from "./Switch";
 import Textbox from "./Textbox";
-import { CHARGE_VALUES } from "@/constants/chargeValue";
 import { ConvertEnToFaNumber } from "@/utils/formatNumber";
 import { chargeType } from "@/types/chargeType";
 import { useFormik } from "formik";
 import { chargeSchema } from "@/validation/chargeForm";
 import { BANKS } from "@/constants/banks";
+import {
+  useGetChargeValuesQuery,
+  useProcessPaymentMutation,
+} from "@/store/apiSlice";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function BuyChargeModal() {
+  const { data: chargeValues = [], isLoading: chargeLoading } =
+    useGetChargeValuesQuery(undefined);
+  const [processPayment, { isLoading: paymentLoading }] =
+    useProcessPaymentMutation();
+
   const [selectedBank, setSelectedBank] = useState(BANKS[0].name);
   const [formComplete, setFormComplete] = useState(false);
   const formik = useFormik({
@@ -19,7 +29,7 @@ export default function BuyChargeModal() {
       simType: "E" as "E" | "D",
       amazing: false,
       phone: undefined,
-      price: CHARGE_VALUES[1].value,
+      price: chargeValues[1]?.value | 20000,
       isCustomPrice: false,
       customePrice: undefined,
       email: undefined,
@@ -30,12 +40,34 @@ export default function BuyChargeModal() {
     },
   });
 
+  const handlePayment = async () => {
+    try {
+      const paymentData = {
+        simType: formik.values.simType,
+        amazing: formik.values.amazing,
+        phone: formik.values.phone,
+        price: formik.values.isCustomPrice
+          ? formik.values.customePrice
+          : formik.values.price,
+        email: formik.values.email,
+        selectedBank: selectedBank,
+      };
+      const result = await processPayment(paymentData).unwrap();
+      if (result?.success) {
+        alert("با موفقیت خریداری شد");
+        setFormComplete(false);
+      }
+    } catch (error) {
+      console.error("Payment failed:", error);
+    }
+  };
+
   useEffect(() => {
-    if (formik.values.amazing) {
-      formik.setFieldValue("price", CHARGE_VALUES[2].value);
+    if (formik.values.amazing && chargeValues.length > 0) {
+      formik.setFieldValue("price", chargeValues[2].value);
       formik.setFieldValue("isCustomPrice", false);
     }
-  }, [formik.values.amazing]);
+  }, [formik.values.amazing, chargeValues]);
 
   useEffect(() => {
     if (formik.values.simType == "D") {
@@ -121,9 +153,19 @@ export default function BuyChargeModal() {
         <div className="flex flex-col gap-2">
           <div className="text-[#8b8b8d] text-sm mb-2">مبلغ شارژ</div>
           <div className="w-full grid grid-cols-3 gap-3">
-            {CHARGE_VALUES.map((item: chargeType, idx) => (
-              <ChargeItem key={idx} charge={item} />
-            ))}
+            {chargeLoading ? (
+              <>
+                <Skeleton height={40} borderRadius={100} />
+                <Skeleton height={40} borderRadius={100} />
+                <Skeleton height={40} borderRadius={100} />
+                <Skeleton height={40} borderRadius={100} />
+                <Skeleton height={40} borderRadius={100} />
+              </>
+            ) : (
+              chargeValues.map((item: chargeType, idx) => (
+                <ChargeItem key={idx} charge={item} />
+              ))
+            )}
             <button
               className={`px-3 py-1 rounded-full ${
                 formik.values.isCustomPrice ? "bg-primary" : "bg-[#f0eff5]"
@@ -201,8 +243,9 @@ export default function BuyChargeModal() {
           <div className="flex flex-col gap-3 w-full">
             <button
               type="button"
-              onClick={() => alert("شارژ با موفقیت خریداری شد.")}
-              className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+              onClick={handlePayment}
+              disabled={paymentLoading}
+              className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden disabled:opacity-50"
             >
               پرداخت و شارژ
             </button>
@@ -304,8 +347,9 @@ export default function BuyChargeModal() {
           <div className="flex flex-col gap-3 w-full">
             <button
               type="button"
-              onClick={() => alert("شارژ با موفقیت خریداری شد.")}
-              className="w-full py-3 rounded-full bg-primary font-bold md:hidden"
+              onClick={handlePayment}
+              disabled={paymentLoading}
+              className="w-full py-3 rounded-full bg-primary font-bold md:hidden disabled:opacity-50"
             >
               پرداخت و شارژ
             </button>

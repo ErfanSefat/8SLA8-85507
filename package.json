@@ -12,11 +12,14 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.9.0",
     "formik": "^2.4.6",
     "iconsax-reactjs": "^0.0.8",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
+    "react-loading-skeleton": "^3.5.0",
+    "react-redux": "^9.2.0",
     "yup": "^1.7.1"
   },
   "devDependencies": {
