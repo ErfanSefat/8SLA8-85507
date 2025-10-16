@@ -1,45 +1,64 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import SimSwitch from "./SimSwitch";
 import Switch from "./Switch";
 import Textbox from "./Textbox";
 import { CHARGE_VALUES } from "@/constants/chargeValue";
 import { ConvertEnToFaNumber } from "@/utils/formatNumber";
 import { chargeType } from "@/types/chargeType";
+import { useFormik } from "formik";
+import { chargeSchema } from "@/validation/chargeForm";
 
 export default function BuyChargeModal() {
-  const [simType, setSimType] = useState<"E" | "D">("E");
-  const [amazing, setAmazing] = useState(false);
-  const [number, setNumber] = useState();
-  const [price, setPrice] = useState<chargeType | undefined>(CHARGE_VALUES[1]);
-  const [isCustomPrice, setIsCustomePrice] = useState(false);
-  const [customPrice, setCustomePrice] = useState<number>();
-  const [email, setEmail] = useState<string>();
+  const formik = useFormik({
+    initialValues: {
+      simType: "E" as "E" | "D",
+      amazing: false,
+      phone: undefined,
+      price: CHARGE_VALUES[1].value,
+      isCustomPrice: false,
+      customePrice: undefined,
+      email: undefined,
+    },
+    validationSchema: chargeSchema,
+    onSubmit: () => {
+      alert("شارژ با موفقیت خریداری شد.");
+    },
+  });
 
   useEffect(() => {
-    if (amazing) {
-      setPrice(CHARGE_VALUES[2]);
-      setIsCustomePrice(false);
+    if (formik.values.amazing) {
+      formik.setFieldValue("price", CHARGE_VALUES[2].value);
+      formik.setFieldValue("isCustomPrice", false);
     }
-  }, [amazing]);
+  }, [formik.values.amazing]);
+
+  useEffect(() => {
+    if (formik.values.simType == "D") {
+      formik.setFieldValue("amazing", false);
+    }
+  }, [formik.values.simType]);
 
   function ChargeItem({ charge }: { charge: chargeType }) {
     return (
       <button
-        disabled={!charge.canBeAmazing && amazing}
+        disabled={!charge.canBeAmazing && formik.values.amazing}
         className={`px-3 py-1 rounded-full flex gap-1 justify-center font-bold items-end ${
-          charge == price ? "bg-primary" : "bg-[#f0eff5]"
+          !formik.values.isCustomPrice && formik.values.price === charge.value
+            ? "bg-primary"
+            : "bg-[#f0eff5]"
         }
         ${
           !charge.canBeAmazing &&
-          amazing &&
+          formik.values.amazing &&
           "cursor-not-allowed text-[#1010104d]"
         }`}
         onClick={() => {
-          setPrice(charge);
-          setIsCustomePrice(false);
+          formik.setFieldValue("price", charge.value);
+          formik.setFieldValue("isCustomPrice", false);
         }}
+        type="button"
       >
         {ConvertEnToFaNumber(`${charge?.value.toLocaleString()}`)}
         {charge && <div className="font-medium text-sm mb-0.5">ریال</div>}
@@ -48,18 +67,35 @@ export default function BuyChargeModal() {
   }
 
   return (
-    <div className="bg-white p-[30px] pb-[65px] rounded-[15px] shadow-lg md:grid grid-cols-5 max-md:space-y-[25px] vazir">
+    <form
+      onSubmit={formik.handleSubmit}
+      className="bg-white p-[30px] pb-[65px] rounded-[15px] shadow-lg md:grid grid-cols-5 max-md:space-y-[25px] vazir"
+    >
       <div className="col-span-3 flex flex-col gap-6 items-center max-w-[315px] mx-auto">
         <div className="text-lg font-bold">خرید آنلاین شارژ ایرانسل</div>
         <div className="flex flex-col items-center gap-2">
           <div className="text-[#8b8b8d] text-sm">نوع سیم‌کارت</div>
-          <SimSwitch simType={simType} setSimType={setSimType} />
+          <SimSwitch
+            simType={formik.values.simType}
+            setSimType={(newSimType) => {
+              formik.setFieldValue("simType", newSimType);
+            }}
+          />
         </div>
         <div className="flex gap-2">
-          <Switch state={amazing} setState={setAmazing} />
+          <Switch
+            state={formik.values.amazing}
+            setState={() => {
+              formik.setFieldValue("amazing", !formik.values.amazing);
+            }}
+            disabled={formik.values.simType == "D"}
+          />
           <label
             htmlFor="charge-amazing"
-            onClick={() => setAmazing((prev) => !prev)}
+            onClick={() => {
+              if (formik.values.simType == "E")
+                formik.setFieldValue("amazing", !formik.values.amazing);
+            }}
           >
             شارژ شگفت انگیز
           </label>
@@ -68,11 +104,16 @@ export default function BuyChargeModal() {
           <Textbox
             name="phone"
             type="number"
-            value={number}
+            value={formik.values.phone}
             label="شماره تلفن همراه"
-            setValue={setNumber}
+            setValue={(e: any) => formik.setFieldValue("phone", e)}
             maxDigit={11}
           />
+          {formik.errors.phone && formik.touched.phone && (
+            <div className="text-red-600 text-xs mt-1">
+              {formik.errors.phone}
+            </div>
+          )}
         </div>
         <div className="flex flex-col gap-2">
           <div className="text-[#8b8b8d] text-sm mb-2">مبلغ شارژ</div>
@@ -82,25 +123,33 @@ export default function BuyChargeModal() {
             ))}
             <button
               className={`px-3 py-1 rounded-full ${
-                isCustomPrice ? "bg-primary" : "bg-[#f0eff5]"
-              } ${amazing && "cursor-not-allowed text-[#1010104d]"}`}
+                formik.values.isCustomPrice ? "bg-primary" : "bg-[#f0eff5]"
+              } ${
+                formik.values.amazing && "cursor-not-allowed text-[#1010104d]"
+              }`}
               onClick={() => {
-                setIsCustomePrice(true);
-                setPrice(undefined);
+                formik.setFieldValue("isCustomPrice", true);
+                formik.setFieldValue("price", undefined);
               }}
-              disabled={amazing}
+              disabled={formik.values.amazing}
+              type="button"
             >
               سایر مبالغ
             </button>
-            {isCustomPrice && (
+            {formik.values.isCustomPrice && (
               <div className="col-span-full">
                 <Textbox
-                  name="زع"
+                  name="customePrice"
                   type="number"
-                  value={customPrice}
+                  value={formik.values.customePrice}
                   label="مبلغ شارژ به ریال"
-                  setValue={setCustomePrice}
+                  setValue={(e: any) => formik.setFieldValue("customePrice", e)}
                 />
+                {formik.touched.customePrice && formik.errors.customePrice && (
+                  <div className="text-red-600 text-xs mt-1">
+                    {formik.errors.customePrice}
+                  </div>
+                )}
                 <div className="text-[#8b8b8d] text-sm text-center mt-2">
                   حداقل ۱۰,۰۰۰ و حداکثر ۹۰۰,۰۰۰ ریال
                 </div>
@@ -112,12 +161,20 @@ export default function BuyChargeModal() {
           <Textbox
             name="email"
             type="email"
-            value={email}
+            value={formik.values.email}
             label="ایمیل (اختیاری)"
-            setValue={setEmail}
+            setValue={(val: any) => formik.setFieldValue("email", val)}
           />
+          {formik.touched.email && formik.errors.email && (
+            <div className="text-red-600 text-xs mt-1">
+              {formik.errors.email}
+            </div>
+          )}
         </div>
-        <button className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden">
+        <button
+          type="submit"
+          className="w-full py-3 rounded-full bg-primary font-bold max-md:hidden"
+        >
           انتخاب بانک و پرداخت
         </button>
       </div>
@@ -131,17 +188,21 @@ export default function BuyChargeModal() {
         <div className="w-full px-[25px] flex flex-col gap-[10px] md:gap-[25px]">
           <Item
             title="نوع سیم‌کارت"
-            value={simType == "E" ? "اعتباری" : "دائمی"}
+            value={formik.values.simType == "E" ? "اعتباری" : "دائمی"}
           />
-          <Item title="مستقیم به شماره" value={number} />
+          <Item title="مستقیم به شماره" value={formik.values.phone} />
           <div className="lg:hidden">
             <Item
               title="مبلغ شارژ (+مالیات)"
               value={ConvertEnToFaNumber(
                 `${
-                  isCustomPrice
-                    ? ((customPrice ?? 0) * 1.1)?.toLocaleString()
-                    : ((price?.value ?? 0) * 1.1)?.toLocaleString()
+                  formik.values.isCustomPrice
+                    ? (
+                        ((formik.values.customePrice ?? 0) * 1.1) as number
+                      )?.toLocaleString()
+                    : (
+                        ((formik.values.price ?? 0) * 1.1) as number
+                      )?.toLocaleString()
                 } ریال`
               )}
             />
@@ -151,24 +212,32 @@ export default function BuyChargeModal() {
               title="مبلغ شارژ (با احتساب مالیات بر ارزش افزوده)"
               value={ConvertEnToFaNumber(
                 `${
-                  isCustomPrice
-                    ? ((customPrice ?? 0) * 1.1)?.toLocaleString()
-                    : ((price?.value ?? 0) * 1.1)?.toLocaleString()
+                  formik.values.isCustomPrice
+                    ? (
+                        (formik.values.customePrice ?? 0) * 1.1
+                      )?.toLocaleString()
+                    : ((formik.values.price ?? 0) * 1.1)?.toLocaleString()
                 } ریال`
               )}
             />
           </div>
-          <Item title="نوع شارژ" value={amazing ? "شگفت انگیز" : "معمولی"} />
-          <Item title="ایمیل" value={email} />
+          <Item
+            title="نوع شارژ"
+            value={formik.values.amazing ? "شگفت انگیز" : "معمولی"}
+          />
+          <Item title="ایمیل" value={formik.values.email} />
           <Item title="نام درگاه پرداخت" value="---" />
         </div>
       </div>
       <div className="mx-auto w-full max-w-[315px] md:hidden">
-        <button className="w-full py-3 rounded-full bg-primary font-bold">
+        <button
+          type="submit"
+          className="w-full py-3 rounded-full bg-primary font-bold"
+        >
           انتخاب بانک و پرداخت
         </button>
       </div>
-    </div>
+    </form>
   );
 }
 

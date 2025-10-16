@@ -1,18 +1,20 @@
-import { Dispatch, SetStateAction } from "react";
-
 export default function Switch({
   state,
   setState,
+  disabled,
 }: {
   state: boolean;
-  setState: Dispatch<SetStateAction<boolean>>;
+  setState: () => void;
+  disabled?: boolean;
 }) {
   return (
     <div
-      className={`relative h-[22px] w-[38px] rounded-full cursor-pointer ${
+      className={`relative h-[22px] w-[38px] rounded-full ${
         state ? "bg-[#080]" : "bg-[#888]"
-      }`}
-      onClick={() => setState((prev) => !prev)}
+      } ${disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer"}`}
+      onClick={() => {
+        if (!disabled) setState();
+      }}
     >
       <div
         className={`absolute w-[16px] aspect-square rounded-full bg-white top-1/2 -translate-y-1/2 transition-all ${

@@ -1,5 +1,3 @@
-import { ChangeEventHandler, Dispatch, SetStateAction } from "react";
-
 export default function Textbox({
   label,
   value,
@@ -12,7 +10,7 @@ export default function Textbox({
   value?: string | number;
   type: string;
   name: string;
-  setValue: Dispatch<SetStateAction<any>>;
+  setValue: (e: any) => void;
   maxDigit?: number;
 }) {
   return (
