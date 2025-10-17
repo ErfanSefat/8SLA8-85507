@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Menubar from "@/components/Menubar";
 import MobileNavbar from "@/components/MobileNavbar";
 import Providers from "@/components/Providers";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "فروشگاه اینترنتی ایرانسل",
@@ -22,6 +23,7 @@ export default function RootLayout({
         <Menubar />
         <MobileNavbar />
         <Providers>{children}</Providers>
+        <Footer />
       </body>
     </html>
   );
