@@ -1,5 +1,5 @@
 import { FOOTER, TELS } from "@/constants/footer";
-import { Call, LinkCircle, Twitch } from "iconsax-reactjs";
+import { Call, Twitch } from "iconsax-reactjs";
 import Link from "next/link";
 import Accordian from "./Accordian";
 
@@ -53,7 +53,7 @@ export default function Footer() {
           </div>
         ))}
       </div>
-      <hr className="mx-auto w-[1140px] border-white/20" />
+      <hr className="mx-auto w-full max-w-[1140px] border-white/20" />
       <div className="py-10 text-center">
         <div className="flex gap-3 justify-center mb-4">
           <div className="bg-primary rounded-full text-black p-1.5">
